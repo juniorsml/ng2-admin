@@ -249,8 +249,8 @@
       <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible('houseHolder','hhPhone','required')" aria-hidden="true"></i>
   </div>
 
-<div [ngClass]="isErrorVisible('houseHolder','hhZipCode','required') ? 'form-group has-error has-feedback' : ' has-feedback'">
-    <div class="form-group">
+
+    <div [ngClass]="isErrorVisible('houseHolder','hhZipCode','required') ? 'form-group has-error has-feedback' : ' has-feedback'">
       <label for="hhZipCode">Householder ZIP Code</label>
       <input type="text" pattern="\d*" formControlName="hhZipCode" class="form-control form-control-lg" id="hhZipCode" placeholder="HouseHolder ZIP Code">
        <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible('houseHolder','hhZipCode','required')" aria-hidden="true"></i>
@@ -260,12 +260,12 @@
       <input type="text" formControlName="hhAddress" class="form-control form-control-lg" id="hhAddress" placeholder="Street, Number, Neighborhood ...">
       <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible('houseHolder','hhAddress','required')" aria-hidden="true"></i>
     </div>
-    <div  [ngClass]="isErrorVisible('houseHolder','hhZipCode','required') ? 'form-group has-error has-feedback' : ' has-feedback'">
+    <div  [ngClass]="isErrorVisible('houseHolder','landmark','required') ? 'form-group has-error has-feedback' : ' has-feedback'">
       <label for="landmark">Address Landmark</label>
       <input type="text" formControlName="landmark" class="form-control form-control-lg" id="landmark" placeholder="Near to, Supermarket, Business; Color ...">
       <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible('houseHolder','landmark','required')" aria-hidden="true"></i>
     </div>
-  </div>
+  
 </fieldset>
   <fieldset class="form-group" formGroupName="status">
     <legend>Status</legend>
