@@ -4,7 +4,7 @@
   <div class="selectContainer input-group">
     <select class="form-control  form-control-lg with-success-addon" [(ngModel)]="selectedValue" (change)="handleSelectedValue()">
       <option  value="">-- select one --</option>
-          <option  *ngFor="let item of itemsList;" value="{{item}}">{{item}}</option>
+          <option  *ngFor="let item of groupList;" value="{{item.$key}}">{{item.$value}}</option>
     </select>
     <span class="input-group-btn">
         <button class="btn btn-success  btn-lg" type="button" (click)="lgModal.show(); setInitialState()" ><i ng-reflect-class-name="ion-plus-round" class="ion-plus-round"></i></button>

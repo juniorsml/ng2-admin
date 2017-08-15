@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-md-12">
       <ba-card title="New Address" baCardClass="with-scroll">
-        <address-cadaster-form  [allowInformGroup]=true (onAddAddress)="addNewIndication($event)"></address-cadaster-form>
+        <address-cadaster-form  [allowInformGroup]=true [territoryGroupList]="territoryGroupList" (onTerritoryGroup)="saveNewTerritoryGroup($event)" (onAddAddress)="addNewIndication($event)"></address-cadaster-form>
+        <simple-notifications [options]="options"></simple-notifications>
       </ba-card>
     </div>
   </div>

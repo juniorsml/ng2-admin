@@ -1,4 +1,6 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import * as Rx from 'rxjs/Rx';
+
 
 
 @Component({
@@ -6,7 +8,7 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
   templateUrl: './selector.html',
   styleUrls: ['./modals.scss']
 })
-export class SelectorWithAdd implements OnInit {
+export class SelectorWithAdd implements OnInit , OnChanges {
 
 
   constructor() {
@@ -16,10 +18,15 @@ export class SelectorWithAdd implements OnInit {
     this.setInitialState();
   }
 
+  ngOnChanges(changes: SimpleChanges){
+    Rx.Observable.from(changes.groupList.currentValue.map(g => g.$value)).subscribe(i => this.itemsList.push(i as string));
+   }
+
   protected value: string;
   protected selectedValue: string;
+  protected itemsList: string[] = [];
   @Input()
-  protected itemsList: string[];
+  protected groupList: any[] = [];
   @Output()
   protected addedNewValues: EventEmitter<string> = new EventEmitter<string>();
   @Output()
@@ -41,7 +48,8 @@ export class SelectorWithAdd implements OnInit {
   }
 
   handleSelectedValue() {
-    this.onChangeSelectedValue.emit(this.selectedValue);
+    let gp = this.groupList.find(i => this.selectedValue == i.$key );
+    this.onChangeSelectedValue.emit(gp);
   }
 
   setInitialState(): void {
