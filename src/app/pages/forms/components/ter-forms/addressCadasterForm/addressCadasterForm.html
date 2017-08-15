@@ -1,8 +1,8 @@
 
-<form [formGroup]="addForm" (ngSubmit)="addTerritory()">
+<form [formGroup]="addForm" >
 <fieldset class="form-group" *ngIf="allowInformGroup">
     <legend>Group</legend>
-      <selector-with-add (addedNewValues)="addedNewGroup($event)"  (onChangeSelectedValue)="onChangeSelectedValue($event)" [itemsList]="groupsList" label ="Assing to a Group">
+      <selector-with-add (addedNewValues)="addedNewGroup($event)"  (onChangeSelectedValue)="onChangeSelectedValue($event)" [groupList]="territoryGroupList" label ="Assing to a Group">
     </selector-with-add>
 
 </fieldset>
@@ -259,6 +259,11 @@
       <input type="text" formControlName="hhAddress" class="form-control form-control-lg" id="hhAddress" placeholder="Street, Number, Neighborhood ...">
       <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible('houseHolder','hhAddress','required')" aria-hidden="true"></i>
     </div>
+    <div [ngClass]="isErrorVisible('houseHolder','numberAddress','required') ? 'form-group has-error has-feedback' : ' has-feedback'">
+      <label for="numberAddress">House Number</label>
+      <input type="text" formControlName="numberAddress" class="form-control form-control-lg" id="numberAddress" placeholder="123A">
+      <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible('houseHolder','numberAddress','required')" aria-hidden="true"></i>
+    </div>
     <div  [ngClass]="isErrorVisible('houseHolder','landmark','required') ? 'form-group has-error has-feedback' : ' has-feedback'">
       <label for="landmark">Address Landmark</label>
       <input type="text" formControlName="landmark" class="form-control form-control-lg" id="landmark" placeholder="Near to, Supermarket, Business; Color ...">
@@ -311,5 +316,5 @@
       <i class="ion-android-cancel form-control-feedback"  *ngIf="isErrorVisible(null,'hhNotes','required')" aria-hidden="true"></i>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+  <button (click)="addTerritory()"  class="btn btn-primary btn-lg">Submit</button>
 </form>

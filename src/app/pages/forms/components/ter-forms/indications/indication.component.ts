@@ -10,7 +10,7 @@ import { NotificationsService } from "angular2-notifications";
 })
 export class IndicationComponent{
 
-  constructor(private territoryService:TerritoriesService , private _service: NotificationsService) {
+  constructor(private territoryService:TerritoriesService , private notificationService: NotificationsService) {
   }
 
   public options = {
@@ -19,10 +19,10 @@ export class IndicationComponent{
       lastOnBottom: true,
   };
 
-  notify() {
-    this._service.success(
+  notifySuccess() {
+    this.notificationService.success(
         'Territory Successfuly Created',
-        'Some Content',
+        'Thank you very mucht',
         {
             showProgressBar: true,
             pauseOnHover: true,
@@ -32,11 +32,23 @@ export class IndicationComponent{
     )
   } 
 
+   notifyError() {
+    this.notificationService.error(
+        'Error ',
+        'Territory Not Created',
+        {
+            showProgressBar: true,
+            pauseOnHover: true,
+            clickToClose: true,
+            maxLength: 10
+        }
+    )
+  }
+
  
 
   addNewIndication(event){
-    console.log(event);
-    this.territoryService.createTerritory(event.value , TerritoryTypeEnum.TBC).subscribe((address) => this.notify());
+    this.territoryService.createTerritory(event.value , TerritoryTypeEnum.TBC).subscribe((address) => this.notifySuccess() , (err) => this.notifyError());
   }
 
 

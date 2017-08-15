@@ -1,6 +1,7 @@
   import {Component , Input, Output ,OnInit, OnDestroy , EventEmitter} from '@angular/core';
-  import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+  import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
   import { TerritoryFieldMasksEnum } from "app/shared/models/territory";
+  import { NotificationsService } from "angular2-notifications";
   const cep = require('cep-promise');
 
 
@@ -11,16 +12,20 @@
   })
   export class AddressCadasterForm implements OnInit {
     
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder ,  private notificationService: NotificationsService) {
       
     }
 
   @Input()
   allowInformGroup:boolean;
+  @Input()
+  territoryGroupList:any[];
   addForm: FormGroup;
-  groupsList:string[] = ["bras","itauera","savoy","tatuape"];
+  territoryGroupNames:string[];
   @Output()
   protected onAddAddress: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  protected onTerritoryGroup: EventEmitter<any> = new EventEmitter<any>();
   errors = {};
   
   //Masks
@@ -34,7 +39,10 @@
 
     formInitialBind():void{
       this.addForm = this.formBuilder.group({
-                  group: [''],
+                  group: this.formBuilder.group({
+                    key: ['', Validators.required],
+                    value: ['', Validators.required],
+                  }),
                   publisher: this.formBuilder.group({
                     pubName: ['', Validators.required],
                   }),
@@ -42,14 +50,15 @@
                     hhName: ['', Validators.required],
                     hhGender:['male',Validators.required],
                     hhNationality : ['nigerien',Validators.required],
-                    hhPhone : ['',Validators.required],
-                    hhZipCode :['',Validators.required],
+                    hhPhone : [''],
+                    hhZipCode :[''],
                     hhAddress : ['',Validators.required],
+                    numberAddress : ['',Validators.required],
                     landmark : ['',Validators.required]
                   }),
                     status: this.formBuilder.group({
                       status: ['tbc', Validators.required],
-                      pubName: ['', Validators.required],
+                      pubName: [''],
                     }),
                   hhNotes:['',Validators.required]
                 });
@@ -78,7 +87,6 @@
   handleCepInformed(event){
     let zipcode = this.sanitize(event.target.value)
     this.searchZipCode(zipcode).then(address => {
-                                console.log(this.addForm);
                                 let addressLine = this.buildAddressLine(address);
                                 let houseHolderForm = this.addForm.controls['houseHolder'] as FormGroup;
                                 houseHolderForm.controls['hhAddress'].setValue(addressLine);
@@ -104,11 +112,14 @@
     }
 
     addedNewGroup(event){
-        this.groupsList.push(event);
-    }
+       if(event!=="")
+         this.onTerritoryGroup.emit(event);
+      }
 
     onChangeSelectedValue(event){
-        this.addForm.controls['group'].setValue(event);
+       let group:FormGroup = this.addForm.controls['group'] as FormGroup;
+       group.controls['key'].setValue(event.$key);
+       group.controls['value'].setValue(event.$value);
     }
 
     sanitize(value){
@@ -117,11 +128,39 @@
     }
 
     addTerritory(){
-        if(this.valid)
+        if(this.valid){
           this.onAddAddress.emit(this.addForm);
-        else
-          console.log(this.addForm.value )
-
+            }
+        else{
+          this.searchForDirty(this.addForm);
+          this.notifyError();
+            }
     }
 
+    searchForDirty(form:FormGroup){
+        Object.keys(form.controls).map(entry => form.controls[entry]).forEach(el =>{
+         if (el instanceof FormGroup){
+           this.searchForDirty(<FormGroup>el);
+         }else{
+           this.dirtify(<FormControl>el);
+         }
+        })
+    } 
+
+    dirtify(el: FormControl){
+       el.markAsDirty();
+    } 
+
+    notifyError() {
+    this.notificationService.error(
+        'Error',
+        'Missign inform some required fields',
+        {
+            showProgressBar: true,
+            pauseOnHover: true,
+            clickToClose: true,
+            maxLength: 100
+        }
+    )
+  }
   }

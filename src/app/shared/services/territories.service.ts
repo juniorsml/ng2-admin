@@ -44,9 +44,22 @@ createTerritory(territory:any , territoryType: any) : Observable<any>{
   dataToSave["territories/" + newTerritoryKey] = territoryToSave;
   dataToSave[`${territoryType}/${newTerritoryKey}`] = true;
 
-  console.log(dataToSave)
 
   return this.firebaseUpdate(dataToSave);
+}
+
+
+createTerritoryGroups(groupName:any) : Observable<any>{
+
+  const newGroupKey = this.fbSDK.ref('territory-ui').child('territoryGroups').push().key;
+  const dataToSave = {};
+  dataToSave[`territoryGroups/${newGroupKey}`] = groupName;
+
+  return this.firebaseUpdate(dataToSave);
+}
+
+loadAllTerritoryGroups(): Observable<any>{
+  return this.db.list('territoryGroups');
 }
 
 firebaseUpdate(dataToSave) {
