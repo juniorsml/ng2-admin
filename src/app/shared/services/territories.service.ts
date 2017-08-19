@@ -29,11 +29,11 @@ export class TerritoriesService {
     });
   }
 
-  getTerritories(): Observable<any> {
-    return this.http.get("http://localhost:1880/tms/territories")
-                                      .map(this.extractData)
-                                        .catch(this.handleError);
+  getAllConfirmedTerritories(): Observable<any> {
+    return this.db.list("territoriesConfirmed").map(cts => cts.map(key =>  this.db.object('territories/' + key.$key)))
+      .flatMap(fbojs => Observable.combineLatest(fbojs) );
   }
+  
 createTerritory(territory:any , territoryType: any) : Observable<any>{
 
   

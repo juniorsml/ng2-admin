@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import { TerritoriesService } from './territories.service';
 import { LocalDataSource } from 'ng2-smart-table';
 
 import 'style-loader!./territories.scss';
@@ -10,6 +9,7 @@ import 'datatables.net-buttons/js/buttons.flash.js';
 import 'datatables.net-buttons/js/buttons.html5.js';
 import 'datatables.net-buttons/js/buttons.print.js';
 import 'datatables.net-autofill/js/dataTables.autoFill.js'
+import { TerritoriesService } from "app/shared/services/territories.service";
 
 @Component({
   selector: 'territories-tables',
@@ -19,17 +19,18 @@ export class Territories implements OnInit {
 
 
   constructor(protected service: TerritoriesService ) {
-
+      console.log("Teste de load");
   }
 
   ngOnInit() {
     setTimeout(() => { this.applyExport() }, 5000);
-
+    
+     console.log("Teste de load");
     //Load all Observables
-    this.territories$ = this.service.getTerritories();
-
-    //Initialize Methods
-    this.loadSmartTableData();
+    this.territories$ = this.service.getAllConfirmedTerritories().subscribe((data) => {
+      console.log(data);
+       // this.source.load(data);
+     });
   }
 
   private territories$;
@@ -75,12 +76,6 @@ export class Territories implements OnInit {
 
 
   source: LocalDataSource = new LocalDataSource();
-
-  loadSmartTableData(){
-    this.territories$.subscribe((data) => {
-        this.source.load(data);
-      });
-  }
 
   applyExport() {
     jQuery('.table').DataTable({
